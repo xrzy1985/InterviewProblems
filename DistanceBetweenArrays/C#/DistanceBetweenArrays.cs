@@ -1,9 +1,3 @@
-/*
-James Patterson
-james.patterson@themerakicode.com
-Visual Studio 2017 C# Solution
-*/
-
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -22,8 +16,6 @@ class Solution
     // Complete the solve function below.
     public static List<double[]> Solve(double loc, double dist, int n)
     {
-        double[][] eventsArray = new double[n][];
-
         // A list that will be populated by arrays representing free space
         List<double[]> freeSpace = new List<double[]>();
 
@@ -40,9 +32,6 @@ class Solution
             // sort the array
             Array.Sort(arr);
 
-            // as i progresses, a new array will be stored in each resulting row
-            eventsArray[i] = arr;
-
             // find out the beginning of the Event
             double min = arr.Min();
 
@@ -56,10 +45,10 @@ class Solution
                 if(min == loc)
                 {
                     // add the new free space location to the List
-                    AddToFreeSpaceList(max, centerLineDistance, freeSpace);
+                    AddToFreeSpaceList(max, dist, freeSpace);
                 }
                 // if the max value is equal to the end of the center line
-                else if(max == centerLineDistance)
+                else if(max == dist)
                 {
                     // add the new free space location to the List
                     AddToFreeSpaceList(loc, min, freeSpace);
@@ -71,7 +60,7 @@ class Solution
                     AddToFreeSpaceList(loc, min, freeSpace);
 
                     // add the new free space location to the List
-                    AddToFreeSpaceList(max, centerLineDistance, freeSpace);
+                    AddToFreeSpaceList(max, dist, freeSpace);
                 }
             }
 
@@ -81,8 +70,26 @@ class Solution
                 // Occurs when the current location is equal to the min value of the event
                 if(min == loc)
                 {
-                    // set our location to the max value of the event
-                    loc = max;
+                    if(i == 0)
+                    {
+                        // set our location to the max value of the event
+                        loc = max;
+                    }
+                    else
+                    {
+                        if (max >= dist)
+                        {
+                            if(max == dist)
+                            {
+                                return freeSpace;
+                            }
+                            else { break; }
+                        }
+                        else
+                        {
+                            AddToFreeSpaceList(max, centerLineDistance, freeSpace);
+                        }
+                    }
                 }
                 else if(min > loc)
                 {
@@ -90,9 +97,13 @@ class Solution
                     AddToFreeSpaceList(loc, min, freeSpace);
 
                     // if our current array has a max larger than our centerLineDistance
-                    if(max >= centerLineDistance)
+                    if(max >= dist)
                     {
-                        break;
+                        if (max == dist)
+                        {
+                            return freeSpace;
+                        }
+                        else { break; }
                     }
                     // if we still have free space behind our current array
                     else
@@ -101,7 +112,7 @@ class Solution
                         if (i == n - 1)
                         {
                             // add the new free space location to the List
-                            AddToFreeSpaceList(max, centerLineDistance, freeSpace);
+                            AddToFreeSpaceList(max, dist, freeSpace);
                         }
                         // if we are just in the middle of the array
                         else
@@ -140,7 +151,6 @@ class Solution
             {
                 Console.Write(dd + " ");
             }
-            
             Console.WriteLine("}");
         }
 
